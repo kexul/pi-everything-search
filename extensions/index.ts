@@ -119,9 +119,7 @@ export default function (pi: ExtensionAPI) {
                 "1. 下载 es.exe: https://www.voidtools.com/support/everything/command_line_interface/\n" +
                 "2. 将 es.exe 放到 Everything 安装目录 (如 C:\\Program Files\\Everything\\)\n" +
                 "3. 或者设置环境变量 EVERYTHING_ES_PATH 指向 es.exe 的完整路径\n\n" +
-                "确保 Everything 正在运行且已启用 HTTP/IPC 服务器:\n" +
-                "- 打开 Everything → Tools → Options → HTTP/IPC Server\n" +
-                "- 勾选 'Enable HTTP server' 或 'Enable IPC server'",
+                "确保 Everything 正在运行。"",
             },
           ],
           isError: true,
@@ -215,7 +213,7 @@ export default function (pi: ExtensionAPI) {
           content: [
             {
               type: "text",
-              text: `搜索失败: ${error.message}\n\n请确保 Everything 正在运行且已启用 IPC 服务器。`,
+              text: `搜索失败: ${error.message}\n\n请确保 Everything 正在运行。`,
             },
           ],
           isError: true,
