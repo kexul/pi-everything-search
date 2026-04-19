@@ -24,12 +24,6 @@ Lightning fast file search on Windows using Everything's pre-built index.
 pi install git:github.com/kexul/pi-everything-search
 ```
 
-Or install from npm after publishing:
-
-```bash
-pi install npm:pi-everything-search
-```
-
 ## Usage
 
 The extension registers the `everything_search` tool and `/es` command.
