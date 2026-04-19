@@ -16,9 +16,7 @@ Lightning fast file search on Windows using Everything's pre-built index.
    - `%USERPROFILE%\.local\bin\es.exe`
    - Or set `EVERYTHING_ES_PATH` environment variable
 
-4. Ensure Everything is running with IPC server enabled:
-   - Everything → Tools → Options → HTTP/IPC Server
-   - Enable "IPC server"
+4. Ensure Everything is running (IPC server is enabled by default)
 
 ### Install via pi
 
