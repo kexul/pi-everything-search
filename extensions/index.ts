@@ -1,5 +1,6 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
+import { Text } from "@mariozechner/pi-tui";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
@@ -200,6 +201,12 @@ export default function (pi: ExtensionAPI) {
             query: params.query,
             count: results.length,
             results: results.slice(0, 1000), // Limit details size
+            path_filter: params.path_filter,
+            max_results: params.max_results,
+            case_sensitive: params.case_sensitive,
+            regex: params.regex,
+            folders_only: params.folders_only,
+            files_only: params.files_only,
           },
         };
       } catch (error: any) {
@@ -219,6 +226,55 @@ export default function (pi: ExtensionAPI) {
           isError: true,
         };
       }
+    },
+
+    renderCall(args, theme, _context) {
+      let text = theme.fg("toolTitle", theme.bold("🔍 everything_search "));
+      text += theme.fg("accent", `"${args.query}"`);
+      
+      const opts: string[] = [];
+      if (args.path_filter) opts.push(`path: ${args.path_filter}`);
+      if (args.max_results && args.max_results !== 100) opts.push(`max: ${args.max_results}`);
+      if (args.case_sensitive) opts.push("case-sensitive");
+      if (args.regex) opts.push("regex");
+      if (args.folders_only) opts.push("folders");
+      if (args.files_only) opts.push("files");
+      
+      if (opts.length > 0) {
+        text += theme.fg("dim", ` (${opts.join(", ")})`);
+      }
+      return new Text(text, 0, 0);
+    },
+
+    renderResult(result, { expanded, isPartial }, theme, _context) {
+      if (isPartial) return new Text(theme.fg("warning", "Searching..."), 0, 0);
+
+      const details = result.details as {
+        query?: string;
+        count?: number;
+        results?: string[];
+      } | undefined;
+      const content = result.content[0];
+
+      if (result.isError || (content?.type === "text" && content.text.includes("❌"))) {
+        const errorText = content?.type === "text" ? content.text.split("\n")[0] : "Error";
+        return new Text(theme.fg("error", errorText), 0, 0);
+      }
+
+      const count = details?.count ?? 0;
+      let text = theme.fg("success", `${count} results`);
+
+      if (expanded && details?.results) {
+        const lines = details.results.slice(0, 20);
+        for (const line of lines) {
+          text += `\n${theme.fg("dim", line)}`;
+        }
+        if (details.results.length > 20) {
+          text += `\n${theme.fg("muted", `... ${details.results.length - 20} more`)}`;
+        }
+      }
+
+      return new Text(text, 0, 0);
     },
   });
 
